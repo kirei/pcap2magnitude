@@ -6,6 +6,8 @@ import logging
 import math
 from collections import defaultdict
 
+import cbor2
+
 
 def main():
     """Main function"""
@@ -30,14 +32,18 @@ def main():
     all_domains: dict[str, set[str]] = defaultdict(set)
 
     for filename in args.hlls:
-        with open(filename) as fp:
-            dataset = json.load(fp)
+        if filename.endswith(".json"):
+            with open(filename) as fp:
+                dataset = json.load(fp)
+        else:
+            with open(filename, "rb") as fp:
+                dataset = cbor2.load(fp)
 
         dataset_clients = set(dataset["clients"])
         all_clients.update(dataset_clients)
 
-        dataset_domains: dict[str, HyperLogLog] = {}
-        dataset_domains = set(dataset["domains"].keys())
+        dataset_domains: dict[str, set[str]] = {}
+        dataset_domains = set(dataset["domains"])
         for domain, domain_clients in dataset["domains"].items():
             all_domains[domain].update(set(domain_clients))
 
@@ -50,7 +56,7 @@ def main():
     magnitudes = {}
     total_unique_clients = len(all_clients)
 
-    for domain in all_domains.keys():
+    for domain in all_domains:
         domain_unique_clients = len(all_domains[domain])
         logging.debug("%d unique clients for %s", domain_unique_clients, domain)
         if m := round((math.log(domain_unique_clients) / math.log(total_unique_clients)) * 10, 3):
