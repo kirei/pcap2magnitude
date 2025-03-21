@@ -1,0 +1,44 @@
+[project]
+name = "pcap2magnitude"
+version = "0.1.0"
+description = "PCAP DNS magnitude tools"
+authors = [{name="Jakob Schlyter", email = "jakob@kirei.se"}]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "cbor2>=5.6.5",
+    "datasketches>=5.2.0",
+    "scapy>=2.6.1",
+]
+
+[project.scripts]
+pcap2hlls = "pcap2magnitude.pcap2hlls:main"
+hlls2magnitude = "pcap2magnitude.hlls2magnitude:main"
+pcap2sets = "pcap2magnitude.pcap2sets:main"
+sets2magnitude = "pcap2magnitude.sets2magnitude:main"
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+ignore = ["E501", "I001"]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = false
+combine-as-imports = true
+split-on-trailing-comma = false

@@ -1,0 +1,6 @@
+dist
+*.lock
+*.egg-info
+*.pcap
+*.json
+*.cbor
