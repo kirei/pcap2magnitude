@@ -60,13 +60,14 @@ def main():
         domain_unique_clients = len(all_domains[domain])
         logging.debug("%d unique clients for %s", domain_unique_clients, domain)
         if m := round((math.log(domain_unique_clients) / math.log(total_unique_clients)) * 10, 3):
-            magnitudes[domain] = m
+            magnitudes[domain] = {"magnitude": m, "clients": int(domain_unique_clients)}
+    res = {"clients": int(total_unique_clients), "domains": magnitudes}
 
     if args.output:
         with open(args.output) as fp:
-            json.dump(magnitudes, fp)
+            json.dump(res, fp)
     else:
-        print(json.dumps(magnitudes, indent=4))
+        print(json.dumps(res, indent=4))
 
 
 if __name__ == "__main__":
