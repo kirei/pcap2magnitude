@@ -13,7 +13,7 @@ mag-hll:
 	uv run hlls2magnitude *-hll.cbor
 
 mag-set:
-	uv run sets2magnitude *-set.json
+	uv run sets2magnitude *-set.cbor
 
 lint:
 	uv run ruff check
