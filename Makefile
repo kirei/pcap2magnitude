@@ -10,7 +10,8 @@ sets:
 mag: mag-hll mag-set
 
 mag-hll:
-	uv run hlls2magnitude *-hll.cbor
+	uv run hlls2magnitude --hll-output merged.cbor *-hll.cbor
+	uv run hlls2magnitude merged.cbor
 
 mag-set:
 	uv run sets2magnitude *-set.cbor

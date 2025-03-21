@@ -21,6 +21,11 @@ def main():
         metavar="filename",
         help="DNS Magnitude output",
     )
+    parser.add_argument(
+        "--hll-output",
+        metavar="filename",
+        help="Merged HLL output",
+    )
     parser.add_argument("--debug", dest="debug", action="store_true", help="Enable debugging")
     parser.add_argument("hlls", metavar="filename", nargs="+", help="HLL files")
     args = parser.parse_args()
@@ -67,6 +72,15 @@ def main():
             json.dump(res, fp)
     else:
         print(json.dumps(res, indent=4))
+
+    if args.hll_output:
+        res = {
+            "clients": all_clients.serialize(),
+            "domains": {domain: clients.serialize() for domain, clients in all_domains.items()},
+        }
+        with open(args.hll_output, "wb") as fp:
+            cbor2.dump(res, fp)
+            logging.info("Wrote %d bytes as CBOR to %s", fp.tell(), args.output)
 
 
 if __name__ == "__main__":
