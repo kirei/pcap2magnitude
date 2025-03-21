@@ -55,7 +55,7 @@ def main():
     magnitudes = {}
     total_unique_clients = all_clients.cardinality()
 
-    for domain in all_domains.keys():
+    for domain in all_domains:
         domain_unique_clients = all_domains[domain].cardinality()
         logging.debug("%d unique clients for %s", domain_unique_clients, domain)
         if m := round((math.log(domain_unique_clients) / math.log(total_unique_clients)) * 10, 3):
