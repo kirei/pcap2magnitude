@@ -27,7 +27,7 @@ def main():
     parser.add_argument(
         "--output",
         metavar="filename",
-        help="HLL collection output",
+        help="SETs collection output",
     )
     parser.add_argument("--labels", type=int, help="Number of labels to count")
     parser.add_argument("--debug", action="store_true", help="Enable debugging")
