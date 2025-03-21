@@ -2,7 +2,7 @@
 HLL implemented using Apache Datasketches
 
 https://datasketches.apache.org/docs/HLL/HllSketches.html
-https://apache.github.io/datasketches-python
+https://apache.github.io/datasketches-python/5.2.0/distinct_counting/hyper_log_log.html
 """
 
 from typing import Self
@@ -39,3 +39,6 @@ class HyperLogLogUnion:
 
     def cardinality(self) -> int:
         return self.sketch.get_estimate()
+
+    def serialize(self) -> bytes:
+        return self.sketch.get_result().serialize_compact()
