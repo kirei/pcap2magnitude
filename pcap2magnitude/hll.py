@@ -1,18 +1,19 @@
 """
 HLL implemented using Apache Datasketches
 
+https://datasketches.apache.org/docs/HLL/HllSketches.html
 https://apache.github.io/datasketches-python
 """
 
 from typing import Self
 
-import datasketches
+from datasketches import hll_sketch, hll_union, tgt_hll_type
 
 
 class HyperLogLog:
-    def __init__(self, sketch=None) -> None:
+    def __init__(self, sketch: hll_sketch | None = None) -> None:
         lgk = 12  # 2^k = 4096 rows in the table
-        self.sketch = sketch or datasketches.hll_sketch(lg_k=lgk, tgt_type=datasketches.tgt_hll_type.HLL_8)
+        self.sketch = sketch or hll_sketch(lg_k=lgk, tgt_type=tgt_hll_type.HLL_8)
 
     def update(self, datum: str) -> None:
         self.sketch.update(datum)
@@ -25,13 +26,13 @@ class HyperLogLog:
 
     @classmethod
     def deserialize(cls, data: bytes) -> Self:
-        return cls(sketch=datasketches.hll_sketch.deserialize(data))
+        return cls(sketch=hll_sketch.deserialize(data))
 
 
 class HyperLogLogUnion:
     def __init__(self) -> None:
         lg_max_k = 12
-        self.sketch = datasketches.hll_union(lg_max_k=lg_max_k)
+        self.sketch = hll_union(lg_max_k=lg_max_k)
 
     def merge(self, hll: HyperLogLog) -> None:
         self.sketch.update(hll.sketch)
