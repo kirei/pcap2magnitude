@@ -8,17 +8,8 @@ from collections import defaultdict
 
 import cbor2
 
-from .hll import HyperLogLog
+from .hll import HyperLogLog, get_top_n
 from .pcap import pcap2queries
-
-
-def get_top_n(hlls: dict[str, HyperLogLog], n: int) -> dict[str, HyperLogLog]:
-    """Return the n largest HLLs"""
-
-    tuples = [(key, hll) for key, hll in hlls.items()]
-    tuples.sort(key=lambda x: x[1].cardinality())
-
-    return {key: hll for key, hll in tuples[:n]}
 
 
 def main():

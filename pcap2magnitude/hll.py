@@ -42,3 +42,12 @@ class HyperLogLogUnion:
 
     def serialize(self) -> bytes:
         return self.sketch.get_result().serialize_compact()
+
+
+def get_top_n(hlls: dict[str, HyperLogLog], n: int) -> dict[str, HyperLogLog]:
+    """Return the n largest HLLs"""
+
+    tuples = [(key, hll) for key, hll in hlls.items()]
+    tuples.sort(key=lambda x: x[1].cardinality(), reverse=True)
+
+    return {key: hll for key, hll in tuples[:n]}
