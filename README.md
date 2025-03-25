@@ -15,8 +15,8 @@ Two data formats are implemented:
 
 ### Convert PCAPs to CBOR-encoded HLLs
 
-    uv run pcap2hlls --labels 1 --output hll1.cbor test1.pcap
-    uv run pcap2hlls --labels 1 --output hll2.cbor test2.pcap
+    uv run pcap2hlls --labels 1 --top 1000 --output hll1.cbor test1.pcap
+    uv run pcap2hlls --labels 1 --top 1000 --output hll2.cbor test2.pcap
 
 ### Merge CBOR-encoded HLLs
 

@@ -11,6 +11,15 @@ from .hll import HyperLogLog
 from .pcap import pcap2queries
 
 
+def get_top_n(hlls: dict[str, HyperLogLog], n: int) -> dict[str, HyperLogLog]:
+    """Return the n largest HLLs"""
+
+    tuples = [(key, hll) for key, hll in hlls.items()]
+    tuples.sort(key=lambda x: x[1].cardinality())
+
+    return {key: hll for key, hll in tuples[:n]}
+
+
 def main():
     """Main function"""
 
@@ -18,6 +27,7 @@ def main():
 
     parser.add_argument("--output", metavar="filename", help="HLLs output")
     parser.add_argument("--labels", type=int, help="Number of labels to count")
+    parser.add_argument("--top", type=int, help="Include only top-n domains")
     parser.add_argument("--debug", action="store_true", help="Enable debugging")
     parser.add_argument("pcaps", metavar="filename", nargs="+", help="PCAP files")
 
@@ -46,6 +56,9 @@ def main():
 
     logging.info("Observed domains: %d", len(domains))
     logging.info("Observed clients: %d", clients.cardinality())
+
+    if args.top:
+        domains = get_top_n(domains, args.top)
 
     if args.output:
         res = {
