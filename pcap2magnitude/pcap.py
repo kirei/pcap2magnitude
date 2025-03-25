@@ -1,4 +1,5 @@
 import re
+from binascii import hexlify
 from ipaddress import IPv4Address, IPv6Address, ip_address
 from pathlib import Path
 
@@ -6,12 +7,12 @@ from scapy.all import DNSQR, IP, IPv6
 from scapy.utils import rdpcap
 
 
-def minimize_address(ip: IPv4Address | IPv6Address) -> IPv4Address | IPv6Address:
-    """Minimize address to /24 or /48"""
+def minimize_address(ip: IPv4Address | IPv6Address) -> bytes:
+    """Minimize address to /24 or /48 represented as bytes"""
     if isinstance(ip, IPv4Address):
-        return IPv4Address(ip.packed[0:3] + b"\0")
+        return ip.packed[0:3]
     else:
-        return IPv6Address(ip.packed[0:6] + 10 * b"\0")
+        return ip.packed[0:6]
 
 
 def truncate_domain(domain: str, labels: int) -> str:
@@ -25,7 +26,7 @@ def pcap2queries(filename: Path, labels: int | None = None, domain_regex: re.Pat
     for packet in rdpcap(filename):
         if packet.haslayer(DNSQR):
             sender = packet[IPv6].src if IPv6 in packet else packet[IP].src
-            client = str(minimize_address(ip_address(sender.lower())))
+            client = hexlify(minimize_address(ip_address(sender.lower()))).decode()
 
             domain = packet[DNSQR].qname.decode().lower()
             if labels:
