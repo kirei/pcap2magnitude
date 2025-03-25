@@ -1,9 +1,7 @@
-"""Calculate DNS Magnitude data from HLLs"""
+"""Merge DNS Magnitude HLLs"""
 
 import argparse
-import json
 import logging
-import math
 from collections import defaultdict
 
 import cbor2
@@ -14,11 +12,11 @@ from .hll import HyperLogLog, HyperLogLogUnion
 def main():
     """Main function"""
 
-    parser = argparse.ArgumentParser(description="HLLs to DNS Magnitude")
+    parser = argparse.ArgumentParser(description="Merge DNS Magnitude HLLs")
 
-    parser.add_argument("--output", metavar="filename", help="DNS Magnitude report output")
+    parser.add_argument("--output", metavar="filename", required=True, help="HLL output file")
     parser.add_argument("--debug", dest="debug", action="store_true", help="Enable debugging")
-    parser.add_argument("hlls", metavar="filename", nargs="+", help="HLL files")
+    parser.add_argument("hlls", metavar="filename", nargs="+", help="HLL input files")
 
     args = parser.parse_args()
 
@@ -42,26 +40,14 @@ def main():
             hll = HyperLogLog.deserialize(hll_bytes)
             all_domains[domain].merge(hll)
 
-    magnitudes = {}
-    total_unique_clients = all_clients.cardinality()
-
-    for domain in all_domains:
-        domain_unique_clients = all_domains[domain].cardinality()
-        logging.debug("%d unique clients for %s", domain_unique_clients, domain)
-        if m := round((math.log(domain_unique_clients) / math.log(total_unique_clients)) * 10, 3):
-            magnitudes[domain] = {"magnitude": m, "clients": int(domain_unique_clients)}
-
     res = {
-        "clients": int(total_unique_clients),
-        "domains": magnitudes,
+        "clients": all_clients.serialize(),
+        "domains": {domain: clients.serialize() for domain, clients in all_domains.items()},
     }
 
-    if args.output:
-        with open(args.output, "w") as fp:
-            json.dump(res, fp)
-        logging.info("Wrote JSON report to %s", args.output)
-    else:
-        print(json.dumps(res, indent=4))
+    with open(args.output, "wb") as fp:
+        cbor2.dump(res, fp)
+        logging.info("Wrote %d bytes as CBOR to %s", fp.tell(), args.output)
 
 
 if __name__ == "__main__":

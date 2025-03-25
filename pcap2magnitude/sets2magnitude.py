@@ -14,13 +14,10 @@ def main():
 
     parser = argparse.ArgumentParser(description="HLLs to DNS Magnitude")
 
-    parser.add_argument(
-        "--output",
-        metavar="filename",
-        help="DNS Magnitude output",
-    )
+    parser.add_argument("--output", metavar="filename", help="DNS Magnitude output")
     parser.add_argument("--debug", dest="debug", action="store_true", help="Enable debugging")
     parser.add_argument("hlls", metavar="filename", nargs="+", help="HLL files")
+
     args = parser.parse_args()
 
     if args.debug:

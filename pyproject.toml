@@ -16,6 +16,7 @@ pcap2hlls = "pcap2magnitude.pcap2hlls:main"
 hlls2magnitude = "pcap2magnitude.hlls2magnitude:main"
 pcap2sets = "pcap2magnitude.pcap2sets:main"
 sets2magnitude = "pcap2magnitude.sets2magnitude:main"
+merge_magnitude_hlls = "pcap2magnitude.merge_hlls:main"
 
 [build-system]
 requires = ["setuptools>=77"]

@@ -16,14 +16,11 @@ def main():
 
     parser = argparse.ArgumentParser(description="PCAP to SETs")
 
-    parser.add_argument(
-        "--output",
-        metavar="filename",
-        help="SETs collection output",
-    )
+    parser.add_argument("--output", metavar="filename", help="SETs output")
     parser.add_argument("--labels", type=int, help="Number of labels to count")
     parser.add_argument("--debug", action="store_true", help="Enable debugging")
     parser.add_argument("pcaps", metavar="filename", nargs="+", help="PCAP files")
+
     args = parser.parse_args()
 
     if args.debug:
