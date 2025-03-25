@@ -1,9 +1,7 @@
 """Create HHLs from PCAPs"""
 
 import argparse
-import binascii
 import logging
-import re
 import time
 from collections import defaultdict
 
@@ -33,7 +31,7 @@ def main():
     domains: dict[str, HyperLogLog] = defaultdict(HyperLogLog)
 
     for filename in args.input:
-        with open(filename, "r") as fp:
+        with open(filename) as fp:
             clients_count = 0
             t1 = time.perf_counter()
             for line in fp.readlines():
