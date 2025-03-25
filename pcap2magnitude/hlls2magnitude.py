@@ -8,7 +8,7 @@ from collections import defaultdict
 
 import cbor2
 
-from .hll import HyperLogLog, HyperLogLogUnion
+from .hll import HyperLogLog, HyperLogLogUnion, get_top_n
 
 
 def main():
@@ -17,6 +17,7 @@ def main():
     parser = argparse.ArgumentParser(description="HLLs to DNS Magnitude")
 
     parser.add_argument("--output", metavar="filename", help="DNS Magnitude report output")
+    parser.add_argument("--top", type=int, help="Include only top-n domains")
     parser.add_argument("--debug", dest="debug", action="store_true", help="Enable debugging")
     parser.add_argument("hlls", metavar="filename", nargs="+", help="HLL files")
 
@@ -42,8 +43,15 @@ def main():
             hll = HyperLogLog.deserialize(hll_bytes)
             all_domains[domain].merge(hll)
 
-    magnitudes = {}
     total_unique_clients = all_clients.cardinality()
+
+    logging.info("Observed domains: %d", len(all_domains))
+    logging.info("Observed clients: %d", total_unique_clients)
+
+    if args.top:
+        all_domains = get_top_n(all_domains, args.top)
+
+    magnitudes: dict[str, dict[str, float | int]] = {}
 
     for domain in all_domains:
         domain_unique_clients = all_domains[domain].cardinality()
