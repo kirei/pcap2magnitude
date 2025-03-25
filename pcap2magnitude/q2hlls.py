@@ -40,7 +40,12 @@ def main():
                 domains[domain].update(client)
                 clients_count += 1
             t2 = time.perf_counter()
-            logging.info("Processed %d clients from %s in %.3f seconds", clients_count, filename, t2 - t1)
+            logging.info(
+                "Processed %d clients from %s in %.3f seconds",
+                clients_count,
+                filename,
+                t2 - t1,
+            )
 
     logging.info("Observed domains: %d", len(domains))
     logging.info("Observed clients: %d", clients.cardinality())
@@ -51,7 +56,9 @@ def main():
     if args.output:
         res = {
             "clients": clients.serialize(),
-            "domains": {domain: clients.serialize() for domain, clients in domains.items()},
+            "domains": {
+                domain: clients.serialize() for domain, clients in domains.items()
+            },
         }
         with open(args.output, "wb") as fp:
             cbor2.dump(res, fp)

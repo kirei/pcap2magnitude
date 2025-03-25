@@ -38,14 +38,21 @@ def main():
         queries_count = 0
         t1 = time.perf_counter()
 
-        for client, domain in pcap2queries(filename, labels=args.labels, domain_regex=args.re):
+        for client, domain in pcap2queries(
+            filename, labels=args.labels, domain_regex=args.re
+        ):
             logging.debug("%s %s", domain, client)
             clients.update(client)
             domains[domain].update(client)
             queries_count += 1
 
         t2 = time.perf_counter()
-        logging.info("Processed %d queries from %s in %.3f seconds", queries_count, filename, t2 - t1)
+        logging.info(
+            "Processed %d queries from %s in %.3f seconds",
+            queries_count,
+            filename,
+            t2 - t1,
+        )
 
     logging.info("Observed domains: %d", len(domains))
     logging.info("Observed clients: %d", clients.cardinality())
@@ -56,7 +63,9 @@ def main():
     if args.output:
         res = {
             "clients": clients.serialize(),
-            "domains": {domain: clients.serialize() for domain, clients in domains.items()},
+            "domains": {
+                domain: clients.serialize() for domain, clients in domains.items()
+            },
         }
         with open(args.output, "wb") as fp:
             cbor2.dump(res, fp)

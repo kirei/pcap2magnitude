@@ -1,5 +1,6 @@
 {
         "ruff.fixAll": true,
+        "ruff.lineLength": 88,
         "editor.codeActionsOnSave": {
                  "source.organizeImports": "explicit"
         },

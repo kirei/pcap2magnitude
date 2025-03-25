@@ -16,6 +16,10 @@ mag-hll:
 mag-set:
 	uv run sets2magnitude *-set.cbor
 
+reformat:
+	uv run ruff check --select I --fix
+	uv run ruff format
+
 lint:
 	uv run ruff check
 

@@ -20,7 +20,11 @@ def truncate_domain(domain: str, labels: int) -> str:
     return ".".join(domain.split(".")[-(labels + 1) :])
 
 
-def pcap2queries(filename: Path, labels: int | None = None, domain_regex: re.Pattern[str] | None = None):
+def pcap2queries(
+    filename: Path,
+    labels: int | None = None,
+    domain_regex: re.Pattern[str] | None = None,
+):
     """Read DNS packets from filename and yield minimize client address and domain"""
 
     for packet in rdpcap(filename):

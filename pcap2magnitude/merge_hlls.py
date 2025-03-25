@@ -14,8 +14,12 @@ def main():
 
     parser = argparse.ArgumentParser(description="Merge DNS Magnitude HLLs")
 
-    parser.add_argument("--output", metavar="filename", required=True, help="HLL output file")
-    parser.add_argument("--debug", dest="debug", action="store_true", help="Enable debugging")
+    parser.add_argument(
+        "--output", metavar="filename", required=True, help="HLL output file"
+    )
+    parser.add_argument(
+        "--debug", dest="debug", action="store_true", help="Enable debugging"
+    )
     parser.add_argument("hlls", metavar="filename", nargs="+", help="HLL input files")
 
     args = parser.parse_args()
@@ -42,7 +46,9 @@ def main():
 
     res = {
         "clients": all_clients.serialize(),
-        "domains": {domain: clients.serialize() for domain, clients in all_domains.items()},
+        "domains": {
+            domain: clients.serialize() for domain, clients in all_domains.items()
+        },
     }
 
     with open(args.output, "wb") as fp:

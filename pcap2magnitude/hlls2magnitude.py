@@ -16,9 +16,13 @@ def main():
 
     parser = argparse.ArgumentParser(description="HLLs to DNS Magnitude")
 
-    parser.add_argument("--output", metavar="filename", help="DNS Magnitude report output")
+    parser.add_argument(
+        "--output", metavar="filename", help="DNS Magnitude report output"
+    )
     parser.add_argument("--top", type=int, help="Include only top-n domains")
-    parser.add_argument("--debug", dest="debug", action="store_true", help="Enable debugging")
+    parser.add_argument(
+        "--debug", dest="debug", action="store_true", help="Enable debugging"
+    )
     parser.add_argument("hlls", metavar="filename", nargs="+", help="HLL files")
 
     args = parser.parse_args()
@@ -56,7 +60,9 @@ def main():
     for domain in all_domains:
         domain_unique_clients = all_domains[domain].cardinality()
         logging.debug("%d unique clients for %s", domain_unique_clients, domain)
-        if m := round((math.log(domain_unique_clients) / math.log(total_unique_clients)) * 10, 3):
+        if m := round(
+            (math.log(domain_unique_clients) / math.log(total_unique_clients)) * 10, 3
+        ):
             magnitudes[domain] = {"magnitude": m, "clients": int(domain_unique_clients)}
 
     res = {

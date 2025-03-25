@@ -42,7 +42,12 @@ def main():
             queries_count += 1
 
         t2 = time.perf_counter()
-        logging.info("Processed %d queries from %s in %.3f seconds", queries_count, filename, t2 - t1)
+        logging.info(
+            "Processed %d queries from %s in %.3f seconds",
+            queries_count,
+            filename,
+            t2 - t1,
+        )
 
     logging.info("Observed domains: %d", len(domains))
     logging.info("Observed clients: %d", len(clients))
