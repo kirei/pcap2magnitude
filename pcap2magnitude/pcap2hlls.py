@@ -2,6 +2,7 @@
 
 import argparse
 import logging
+import re
 import time
 from collections import defaultdict
 
@@ -27,6 +28,7 @@ def main():
 
     parser.add_argument("--output", metavar="filename", help="HLLs output")
     parser.add_argument("--labels", type=int, help="Number of labels to count")
+    parser.add_argument("--re", type=re.compile, help="Limit to domains matching regex")
     parser.add_argument("--top", type=int, help="Include only top-n domains")
     parser.add_argument("--debug", action="store_true", help="Enable debugging")
     parser.add_argument("pcaps", metavar="filename", nargs="+", help="PCAP files")
@@ -45,7 +47,7 @@ def main():
         queries_count = 0
         t1 = time.perf_counter()
 
-        for client, domain in pcap2queries(filename, labels=args.labels):
+        for client, domain in pcap2queries(filename, labels=args.labels, domain_regex=args.re):
             logging.debug("%s %s", domain, client)
             clients.update(client)
             domains[domain].update(client)

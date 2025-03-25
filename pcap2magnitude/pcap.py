@@ -1,3 +1,4 @@
+import re
 from ipaddress import IPv4Address, IPv6Address, ip_address
 from pathlib import Path
 
@@ -18,7 +19,7 @@ def truncate_domain(domain: str, labels: int) -> str:
     return ".".join(domain.split(".")[-(labels + 1) :])
 
 
-def pcap2queries(filename: Path, labels: int | None = None):
+def pcap2queries(filename: Path, labels: int | None = None, domain_regex: re.Pattern[str] | None = None):
     """Read DNS packets from filename and yield minimize client address and domain"""
 
     for packet in rdpcap(filename):
@@ -30,4 +31,9 @@ def pcap2queries(filename: Path, labels: int | None = None):
             if labels:
                 domain = truncate_domain(domain, labels)
 
-            yield client, domain.rstrip(".")
+            domain = domain.rstrip(".")
+
+            if domain_regex and not domain_regex.fullmatch(domain):
+                continue
+
+            yield client, domain
