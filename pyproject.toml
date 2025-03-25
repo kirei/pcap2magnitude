@@ -13,6 +13,7 @@ dependencies = [
 
 [project.scripts]
 pcap2hlls = "pcap2magnitude.pcap2hlls:main"
+q2hlls = "pcap2magnitude.q2hlls:main"
 hlls2magnitude = "pcap2magnitude.hlls2magnitude:main"
 pcap2sets = "pcap2magnitude.pcap2sets:main"
 sets2magnitude = "pcap2magnitude.sets2magnitude:main"
